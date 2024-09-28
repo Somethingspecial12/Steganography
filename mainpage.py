@@ -53,7 +53,7 @@ class Ui_Dialog(object):
         self.label_4.setAlignment(QtCore.Qt.AlignCenter)
         self.label_4.setObjectName("label_4")
         self.pushButton_3 = QtWidgets.QPushButton(self.widget)
-        self.pushButton_3.setGeometry(QtCore.QRect(300, 500, 200, 40))
+        self.pushButton_3.setGeometry(QtCore.QRect(260, 500, 200, 40))
         font = QtGui.QFont()
         font.setFamily("Rockwell Extra Bold")
         font.setPointSize(12)
@@ -75,7 +75,7 @@ class Ui_Dialog(object):
 "}")
         self.pushButton_3.setObjectName("pushButton_3")
         self.pushButton_4 = QtWidgets.QPushButton(self.widget)
-        self.pushButton_4.setGeometry(QtCore.QRect(700, 500, 200, 40))
+        self.pushButton_4.setGeometry(QtCore.QRect(540, 500, 200, 40))
         font = QtGui.QFont()
         font.setFamily("Rockwell Extra Bold")
         font.setPointSize(12)
@@ -118,12 +118,12 @@ class Ui_Dialog(object):
         self.titleframe.setFrameShadow(QtWidgets.QFrame.Raised)
         self.titleframe.setObjectName("titleframe")
         self.label_6 = QtWidgets.QLabel(self.titleframe)
-        self.label_6.setGeometry(QtCore.QRect(20, 20, 61, 61))
+        self.label_6.setGeometry(QtCore.QRect(20, 20, 60, 60))
         self.label_6.setStyleSheet("image: url(:/images/logoimgae.png);")
         self.label_6.setText("")
         self.label_6.setObjectName("label_6")
         self.label_5 = QtWidgets.QLabel(self.titleframe)
-        self.label_5.setGeometry(QtCore.QRect(90, 30, 151, 51))
+        self.label_5.setGeometry(QtCore.QRect(90, 30, 150, 50))
         font = QtGui.QFont()
         font.setFamily("Ravie")
         font.setPointSize(14)
@@ -150,30 +150,8 @@ class Ui_Dialog(object):
         self.minimizeButton.setIcon(icon1)
         self.minimizeButton.setIconSize(QtCore.QSize(40, 40))
         self.minimizeButton.setObjectName("minimizeButton")
-        self.pushButton = QtWidgets.QPushButton(self.widget)
-        self.pushButton.setGeometry(QtCore.QRect(420, 360, 141, 28))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("QPushButton{\n"
-"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
-"   color:rgba(255, 255, 255, 210);\n"
-"   border-radius:5px;\n"
-"}\n"
-"QPushButton:hover{\n"
-"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
-"   }\n"
-"QPushButton:pressed{\n"
-"    padding-left:5px;\n"
-"    padding-top:5px;\n"
-"    background-color:rgba(105, 118, 132, 200);\n"
-"}\n"
-"")
-        self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.widget)
-        self.pushButton_2.setGeometry(QtCore.QRect(670, 360, 93, 28))
+        self.pushButton_2.setGeometry(QtCore.QRect(590, 610, 93, 28))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -193,6 +171,28 @@ class Ui_Dialog(object):
 "    background-color:rgba(105, 118, 132, 200);\n"
 "}")
         self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_5 = QtWidgets.QPushButton(self.widget)
+        self.pushButton_5.setGeometry(QtCore.QRect(820, 500, 200, 40))
+        font = QtGui.QFont()
+        font.setFamily("Rockwell Extra Bold")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pushButton_5.setFont(font)
+        self.pushButton_5.setStyleSheet("QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"   color:rgba(255, 255, 255, 210);\n"
+"   border-radius:5px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"   }\n"
+"QPushButton:pressed{\n"
+"    padding-left:5px;\n"
+"    padding-top:5px;\n"
+"    background-color:rgba(105, 118, 132, 200);\n"
+"}")
+        self.pushButton_5.setObjectName("pushButton_5")
 
         self.retranslateUi(Dialog)
         self.closeButton.clicked.connect(Dialog.close) # type: ignore
@@ -208,6 +208,6 @@ class Ui_Dialog(object):
         self.pushButton_4.setText(_translate("Dialog", "DECODE"))
         self.label_7.setText(_translate("Dialog", "STEGHIDE IS PYTHON BASED LSB STEGANOGRAPHY TOOL THAT ALLOWS YOU TO HIDE CONFIDENTIAL INFORMATION WITHIN DIGITAL IMAGE FILE"))
         self.label_5.setText(_translate("Dialog", "STEGHIDE"))
-        self.pushButton.setText(_translate("Dialog", "How It Works"))
         self.pushButton_2.setText(_translate("Dialog", "About"))
+        self.pushButton_5.setText(_translate("Dialog", "DETECT"))
 import source_img_rc

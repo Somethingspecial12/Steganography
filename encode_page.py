@@ -194,6 +194,28 @@ class Ui_Dialog(object):
 "    background-color:rgba(105, 118, 132, 200);\n"
 "}")
         self.encryptButton.setObjectName("encryptButton")
+        self.histogramButton = QtWidgets.QPushButton(self.widget)
+        self.histogramButton.setGeometry(QtCore.QRect(610, 620, 200, 40))
+        font = QtGui.QFont()
+        font.setFamily("Rockwell Extra Bold")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.histogramButton.setFont(font)
+        self.histogramButton.setStyleSheet("QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"   color:rgba(255, 255, 255, 210);\n"
+"   border-radius:5px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"   }\n"
+"QPushButton:pressed{\n"
+"    padding-left:5px;\n"
+"    padding-top:5px;\n"
+"    background-color:rgba(105, 118, 132, 200);\n"
+"}")
+        self.histogramButton.setObjectName("histogramButton")
 
         self.retranslateUi(Dialog)
         self.closeButton.clicked.connect(Dialog.close) # type: ignore
@@ -209,4 +231,5 @@ class Ui_Dialog(object):
         self.saveButton.setText(_translate("Dialog", "Save Image"))
         self.label_5.setText(_translate("Dialog", "STEGHIDE"))
         self.encryptButton.setText(_translate("Dialog", "ENCRYPT"))
+        self.histogramButton.setText(_translate("Dialog", "ENCRYPT"))
 import source_img_rc
