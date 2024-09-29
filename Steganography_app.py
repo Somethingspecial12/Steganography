@@ -12,7 +12,7 @@ from mainpage import Ui_Dialog as MainPageUi
 from encode_page import Ui_Dialog as EncodePageUi
 from decode_page import Ui_Dialog as DecodePageUi
 from detection import Ui_Dialog as DetectionPageUi
-
+import numpy as np
 from stegano import lsb
 from dialogclass import CustomDialog
 from cryptography.fernet import Fernet
@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
         self.detection_ui.setupUi(self.detection)
         self.detection_ui.closeButton_2.clicked.connect(self.close_application)
         self.detection_ui.minimizeButton_2.clicked.connect(self.minimize_application)
-        self.detection_ui.selectButton_2.clicked.connect(lambda: self.select_image(self.detection_ui.encodeImageLabel_2))
+        #self.detection_ui.selectButton_2.clicked.connect(lambda: self.select_image(self.detection_ui.encodeImageLabel_2))
         self.detection_ui.histogramButton.clicked.connect(self.show_histogram_analysis)
         
       
@@ -88,6 +88,8 @@ class MainWindow(QMainWindow):
         self.encode_page_ui.backButton.clicked.connect(self.show_main_page)
         self.decode_page_ui.backButton.clicked.connect(self.show_main_page)
         self.detection_ui.backButton_2.clicked.connect(self.show_main_page)
+        self.detection_ui.cleanimageButton.clicked.connect(self.select_clean_image)
+        self.detection_ui.StegoimageButton.clicked.connect(self.select_stego_image)
 
          # Variables to store mouse press state
         self.dragging = False
@@ -97,10 +99,13 @@ class MainWindow(QMainWindow):
         self.main_page.titleframe.installEventFilter(self)
         self.encode_page_ui.titleframe.installEventFilter(self)
         self.decode_page_ui.titleframe.installEventFilter(self)
+        self.detection_ui.titleframe.installEventFilter(self)
 
          # Initialize variables
         self.filename = None
         self.secret = None
+        self.clean_image_path = None
+        self.stego_image_path = None
 
 
 
@@ -287,44 +292,84 @@ class MainWindow(QMainWindow):
         decrypted_message = fernet.decrypt(message.encode()).decode()
         return decrypted_message
     
+    
+    def select_clean_image(self):
+        
+        self.clean_image_path, _ = QFileDialog.getOpenFileName(self, 'Select Clean Image', '', "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*.*)")
+        if self.clean_image_path:
+            self.display_image(self.clean_image_path, self.detection_ui.cleanImageLabel)
+        else:
+            print("No clean image selected.")
+    
+    def select_stego_image(self):
+       
+        self.stego_image_path, _ = QFileDialog.getOpenFileName(self, 'Select Stego Image', '', "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*.*)")
+        if self.stego_image_path:
+            self.display_image(self.stego_image_path, self.detection_ui.stegoImageLabel)
+        else:
+            print("No stego image selected.")
+
+
+    def display_image(self, image_path, label):
+       
+        img = Image.open(image_path)
+        img = img.convert("RGBA")
+        data = img.tobytes("raw", "RGBA")
+        q_image = QtGui.QImage(data, img.width, img.height, QtGui.QImage.Format_RGBA8888)
+        pixmap = QtGui.QPixmap.fromImage(q_image)
+        label.setPixmap(pixmap.scaled(175, 175, Qt.KeepAspectRatio))
+        label.setFixedSize(175, 175)
 
     def show_histogram_analysis(self):
-        if self.filename:
-            print(f"Filename in histogram analysis: {self.filename}")  # Debugging line
-            self.show_histogram(self.filename)
-        else:
-            text = "No image selected for analysis."
-            dlg = CustomDialog(text)
-            dlg.exec()
-
-
-
-    def show_histogram(self, image_path):
-        if not image_path or not os.path.exists(image_path):
-            print(f"Invalid image path: {image_path}")
-            return
-        
-        image = cv2.imread(image_path)
-        if image is None:
-            print(f"Failed to load image from {image_path}.")
+  
+        if not self.clean_image_path or not self.stego_image_path:
+            print("Invalid image path(s)")
             return
 
-        # Define the correct color list for histogram
-        color = ['b', 'g', 'r']  # Blue, Green, Red channels
-        plt.figure(figsize=(6, 4))  # Set figure size
+        clean_image = cv2.imread(self.clean_image_path)
+        stego_image = cv2.imread(self.stego_image_path)
         
-        for i, col in enumerate(color):
-            hist = cv2.calcHist([image], [i], None, [256], [0, 256])
-            plt.plot(hist, color=col)
+        if clean_image is None or stego_image is None:
+            print("Failed to load image(s).")
+            return
+
+        # Compute histograms for both images
+        clean_histograms = []
+        stego_histograms = []
+        colors = ('b', 'g', 'r')
+        
+        plt.figure(figsize=(8, 6))  # Set figure size
+        
+        for i, color in enumerate(colors):
+            clean_hist = cv2.calcHist([clean_image], [i], None, [256], [0, 256])
+            stego_hist = cv2.calcHist([stego_image], [i], None, [256], [0, 256])
+
+            clean_histograms.append(clean_hist)
+            stego_histograms.append(stego_hist)
+            
+            # Compute histogram difference
+            hist_diff = stego_hist - clean_hist
+            
+            # Plot the histograms for the current color channel
+            plt.subplot(3, 1, i + 1)  # One subplot for each color channel (B, G, R)
+            plt.plot(hist_diff, color=color)
             plt.xlim([0, 256])
+            plt.title(f'Difference in {color.upper()} channel')
+            plt.xlabel('Pixel Intensity')
+            plt.ylabel('Difference')
         
+        plt.tight_layout()
+        plt.show()
+
         # Save the plot as an image
-        histogram_image_path = 'histogram.png'
-        plt.savefig(histogram_image_path)
-        plt.close()  # Close the plot after saving
-        
-        # Display the histogram image in a QLabel
-        self.display_histogram_on_label(histogram_image_path)
+        difference_image_path = 'histogram_difference.png'
+        plt.savefig(difference_image_path)
+        plt.close()
+
+        # Display the difference histogram image in the QLabel
+        self.display_histogram_on_label(difference_image_path)
+
+    
 
 
 

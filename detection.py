@@ -34,28 +34,6 @@ class Ui_Dialog(object):
         self.label_7.setScaledContents(False)
         self.label_7.setWordWrap(True)
         self.label_7.setObjectName("label_7")
-        self.selectButton_2 = QtWidgets.QPushButton(self.widget_2)
-        self.selectButton_2.setGeometry(QtCore.QRect(80, 560, 151, 31))
-        font = QtGui.QFont()
-        font.setFamily("Rockwell Extra Bold")
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.selectButton_2.setFont(font)
-        self.selectButton_2.setStyleSheet("QPushButton{\n"
-"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
-"   color:rgba(255, 255, 255, 210);\n"
-"   border-radius:5px;\n"
-"}\n"
-"QPushButton:hover{\n"
-"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
-"   }\n"
-"QPushButton:pressed{\n"
-"    padding-left:5px;\n"
-"    padding-top:5px;\n"
-"    background-color:rgba(105, 118, 132, 200);\n"
-"}")
-        self.selectButton_2.setObjectName("selectButton_2")
         self.backButton_2 = QtWidgets.QPushButton(self.widget_2)
         self.backButton_2.setGeometry(QtCore.QRect(20, 630, 70, 50))
         font = QtGui.QFont()
@@ -65,13 +43,13 @@ class Ui_Dialog(object):
 "border-radius:20px")
         self.backButton_2.setText("")
         self.backButton_2.setObjectName("backButton_2")
-        self.titleframe_2 = QtWidgets.QFrame(self.widget_2)
-        self.titleframe_2.setGeometry(QtCore.QRect(0, 0, 1200, 90))
-        self.titleframe_2.setStyleSheet("border-radius:20px;")
-        self.titleframe_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.titleframe_2.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.titleframe_2.setObjectName("titleframe_2")
-        self.minimizeButton_2 = QtWidgets.QPushButton(self.titleframe_2)
+        self.titleframe = QtWidgets.QFrame(self.widget_2)
+        self.titleframe.setGeometry(QtCore.QRect(0, 0, 1200, 90))
+        self.titleframe.setStyleSheet("border-radius:20px;")
+        self.titleframe.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.titleframe.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.titleframe.setObjectName("titleframe")
+        self.minimizeButton_2 = QtWidgets.QPushButton(self.titleframe)
         self.minimizeButton_2.setGeometry(QtCore.QRect(1090, 10, 51, 41))
         self.minimizeButton_2.setText("")
         icon = QtGui.QIcon()
@@ -79,12 +57,12 @@ class Ui_Dialog(object):
         self.minimizeButton_2.setIcon(icon)
         self.minimizeButton_2.setIconSize(QtCore.QSize(40, 40))
         self.minimizeButton_2.setObjectName("minimizeButton_2")
-        self.label_9 = QtWidgets.QLabel(self.titleframe_2)
+        self.label_9 = QtWidgets.QLabel(self.titleframe)
         self.label_9.setGeometry(QtCore.QRect(20, 20, 60, 60))
         self.label_9.setStyleSheet("image: url(:/images/logoimgae.png);")
         self.label_9.setText("")
         self.label_9.setObjectName("label_9")
-        self.label_10 = QtWidgets.QLabel(self.titleframe_2)
+        self.label_10 = QtWidgets.QLabel(self.titleframe)
         self.label_10.setGeometry(QtCore.QRect(260, 30, 731, 50))
         font = QtGui.QFont()
         font.setFamily("Ravie")
@@ -96,7 +74,7 @@ class Ui_Dialog(object):
         self.label_10.setStyleSheet("color:rgba(255,255,255,210);")
         self.label_10.setAlignment(QtCore.Qt.AlignCenter)
         self.label_10.setObjectName("label_10")
-        self.closeButton_2 = QtWidgets.QPushButton(self.titleframe_2)
+        self.closeButton_2 = QtWidgets.QPushButton(self.titleframe)
         self.closeButton_2.setGeometry(QtCore.QRect(1140, 10, 51, 41))
         self.closeButton_2.setText("")
         icon1 = QtGui.QIcon()
@@ -104,14 +82,8 @@ class Ui_Dialog(object):
         self.closeButton_2.setIcon(icon1)
         self.closeButton_2.setIconSize(QtCore.QSize(36, 36))
         self.closeButton_2.setObjectName("closeButton_2")
-        self.encodeImageLabel_2 = QtWidgets.QLabel(self.widget_2)
-        self.encodeImageLabel_2.setGeometry(QtCore.QRect(50, 150, 400, 400))
-        self.encodeImageLabel_2.setStyleSheet("background-color:rgba(0,0,0,100);\n"
-"border-radius:15px;")
-        self.encodeImageLabel_2.setText("")
-        self.encodeImageLabel_2.setObjectName("encodeImageLabel_2")
         self.histogramButton = QtWidgets.QPushButton(self.widget_2)
-        self.histogramButton.setGeometry(QtCore.QRect(260, 560, 200, 40))
+        self.histogramButton.setGeometry(QtCore.QRect(230, 620, 200, 40))
         font = QtGui.QFont()
         font.setFamily("Rockwell Extra Bold")
         font.setPointSize(12)
@@ -133,11 +105,67 @@ class Ui_Dialog(object):
 "}")
         self.histogramButton.setObjectName("histogramButton")
         self.histogramLabel = QtWidgets.QLabel(self.widget_2)
-        self.histogramLabel.setGeometry(QtCore.QRect(470, 150, 600, 400))
+        self.histogramLabel.setGeometry(QtCore.QRect(510, 150, 600, 450))
         self.histogramLabel.setStyleSheet("background-color:rgba(0,0,0,100);\n"
 "border-radius:15px;")
         self.histogramLabel.setText("")
         self.histogramLabel.setObjectName("histogramLabel")
+        self.StegoimageButton = QtWidgets.QPushButton(self.widget_2)
+        self.StegoimageButton.setGeometry(QtCore.QRect(130, 360, 311, 40))
+        font = QtGui.QFont()
+        font.setFamily("Rockwell Extra Bold")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.StegoimageButton.setFont(font)
+        self.StegoimageButton.setStyleSheet("QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"   color:rgba(255, 255, 255, 210);\n"
+"   border-radius:5px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"   }\n"
+"QPushButton:pressed{\n"
+"    padding-left:5px;\n"
+"    padding-top:5px;\n"
+"    background-color:rgba(105, 118, 132, 200);\n"
+"}")
+        self.StegoimageButton.setObjectName("StegoimageButton")
+        self.cleanimageButton = QtWidgets.QPushButton(self.widget_2)
+        self.cleanimageButton.setGeometry(QtCore.QRect(130, 130, 311, 40))
+        font = QtGui.QFont()
+        font.setFamily("Rockwell Extra Bold")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cleanimageButton.setFont(font)
+        self.cleanimageButton.setStyleSheet("QPushButton{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(20, 47, 78, 219), stop:1 rgba(85, 98, 112, 226));\n"
+"   color:rgba(255, 255, 255, 210);\n"
+"   border-radius:5px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"    background-color: qlineargradient(spread:pad, x1:0, y1:0.505682, x2:1, y2:0.477, stop:0 rgba(40, 67, 98, 219), stop:1 rgba(105, 118, 132, 226));\n"
+"   }\n"
+"QPushButton:pressed{\n"
+"    padding-left:5px;\n"
+"    padding-top:5px;\n"
+"    background-color:rgba(105, 118, 132, 200);\n"
+"}")
+        self.cleanimageButton.setObjectName("cleanimageButton")
+        self.cleanImageLabel = QtWidgets.QLabel(self.widget_2)
+        self.cleanImageLabel.setGeometry(QtCore.QRect(130, 180, 311, 161))
+        self.cleanImageLabel.setStyleSheet("background-color:rgba(0,0,0,100);\n"
+"border-radius:15px;")
+        self.cleanImageLabel.setText("")
+        self.cleanImageLabel.setObjectName("cleanImageLabel")
+        self.stegoImageLabel = QtWidgets.QLabel(self.widget_2)
+        self.stegoImageLabel.setGeometry(QtCore.QRect(130, 420, 311, 161))
+        self.stegoImageLabel.setStyleSheet("background-color:rgba(0,0,0,100);\n"
+"border-radius:15px;")
+        self.stegoImageLabel.setText("")
+        self.stegoImageLabel.setObjectName("stegoImageLabel")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -145,7 +173,8 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.selectButton_2.setText(_translate("Dialog", "Select Image"))
         self.label_10.setText(_translate("Dialog", "Statistical Analysis - Detection Via Histogram"))
         self.histogramButton.setText(_translate("Dialog", "DETECT"))
+        self.StegoimageButton.setText(_translate("Dialog", "SELECT STEGO IMAGE"))
+        self.cleanimageButton.setText(_translate("Dialog", "SELECT CLEAN IMAGE"))
 import source_img_rc
