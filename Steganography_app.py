@@ -18,14 +18,18 @@ from dialogclass import CustomDialog
 from cryptography.fernet import Fernet
 import base64
 import hashlib
+import numpy as np
+from scipy.stats import chisquare
+import math
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         base_path = os.path.dirname(os.path.abspath(__file__))
         self.setWindowTitle("Steganography Application")
-        self.setGeometry(100, 100, 1200, 700)
-        self.setFixedSize(1200, 700)
+        self.setGeometry(100, 100, 1500, 900)
+        self.setFixedSize(1500, 900)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -76,6 +80,8 @@ class MainWindow(QMainWindow):
         self.detection_ui.minimizeButton_2.clicked.connect(self.minimize_application)
         #self.detection_ui.selectButton_2.clicked.connect(lambda: self.select_image(self.detection_ui.encodeImageLabel_2))
         self.detection_ui.histogramButton.clicked.connect(self.show_histogram_analysis)
+        #self.detection_ui.detectButton.clicked.connect(self.single_image_steganography_detection)
+
         
       
         # Add all pages to the stacked widget
@@ -106,6 +112,7 @@ class MainWindow(QMainWindow):
         self.secret = None
         self.clean_image_path = None
         self.stego_image_path = None
+        self.single_stego_path = None
 
 
 
@@ -292,7 +299,10 @@ class MainWindow(QMainWindow):
         decrypted_message = fernet.decrypt(message.encode()).decode()
         return decrypted_message
     
+
+
     
+    #comparing two images clean and stego images method     
     def select_clean_image(self):
         
         self.clean_image_path, _ = QFileDialog.getOpenFileName(self, 'Select Clean Image', '', "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*.*)")
@@ -301,6 +311,8 @@ class MainWindow(QMainWindow):
         else:
             print("No clean image selected.")
     
+
+
     def select_stego_image(self):
        
         self.stego_image_path, _ = QFileDialog.getOpenFileName(self, 'Select Stego Image', '', "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*.*)")
@@ -310,6 +322,7 @@ class MainWindow(QMainWindow):
             print("No stego image selected.")
 
 
+
     def display_image(self, image_path, label):
        
         img = Image.open(image_path)
@@ -317,8 +330,10 @@ class MainWindow(QMainWindow):
         data = img.tobytes("raw", "RGBA")
         q_image = QtGui.QImage(data, img.width, img.height, QtGui.QImage.Format_RGBA8888)
         pixmap = QtGui.QPixmap.fromImage(q_image)
-        label.setPixmap(pixmap.scaled(175, 175, Qt.KeepAspectRatio))
-        label.setFixedSize(175, 175)
+        label.setPixmap(pixmap.scaled(350, 350, Qt.KeepAspectRatio))
+        label.setFixedSize(350, 350)
+
+
 
     def show_histogram_analysis(self):
   
@@ -369,6 +384,17 @@ class MainWindow(QMainWindow):
         # Display the difference histogram image in the QLabel
         self.display_histogram_on_label(difference_image_path)
 
+        # Now implement detection logic based on the histogram difference
+        # You can define a threshold for detection
+        total_diff = np.sum([np.sum(cv2.absdiff(clean_hist, stego_hist)) for clean_hist, stego_hist in zip(clean_histograms, stego_histograms)])
+
+        # Define a threshold for considering the image as having steganography
+        threshold = 1000  # You may need to fine-tune this value based on experiments
+
+        if total_diff > threshold:
+            print("Possible steganography detected based on histogram analysis.")
+        else:
+            print("No significant signs of steganography.")
     
 
 
@@ -383,6 +409,196 @@ class MainWindow(QMainWindow):
         # Load the saved histogram image and display it in the QLabel
         pixmap = QtGui.QPixmap(image_path)
         self.detection_ui.histogramLabel.setPixmap(pixmap.scaled(600, 700, Qt.KeepAspectRatio))
+
+
+    #second method(first used method) - calculating histogram for single image :
+    def show_histogram_analysis2(self):
+        if self.filename:
+            print(f"Filename in histogram analysis: {self.filename}")  # Debugging line
+            self.show_histogram(self.filename)
+        else:
+            text = "No image selected for analysis."
+            dlg = CustomDialog(text)
+            dlg.exec()
+
+    def show_histogram(self, image_path):
+        if not image_path or not os.path.exists(image_path):
+            print(f"Invalid image path: {image_path}")
+            return
+        
+        image = cv2.imread(image_path)
+        if image is None:
+            print(f"Failed to load image from {image_path}.")
+            return
+
+        # Define the correct color list for histogram
+        color = ['b', 'g', 'r']  # Blue, Green, Red channels
+        plt.figure(figsize=(6, 4))  # Set figure size
+        
+        for i, col in enumerate(color):
+            hist = cv2.calcHist([image], [i], None, [256], [0, 256])
+            plt.plot(hist, color=col)
+            plt.xlim([0, 256])
+        
+        # Save the plot as an image
+        histogram_image_path = 'histogram.png'
+        plt.savefig(histogram_image_path)
+        plt.close()  # Close the plot after saving
+        
+        # Display the histogram image in a QLabel
+        self.display_histogram_on_label(histogram_image_path)
+
+
+
+
+    #third method for single image detection - calculating chi square, entropology and Rs analysis
+    def single_image_steganography_detection(self):
+        self.single_stego_path, _ = QFileDialog.getOpenFileName(self, 'Select Image for Detection', '', "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*.*)")
+        
+        if not self.single_stego_path:
+            print("No image selected.")
+            return
+        
+        # Call the detection function
+        self.detect_steganography(self.single_stego_path)
+
+
+
+    def detect_steganography(self, image_path):
+
+        if not os.path.exists(image_path):
+            print("Invalid image path.")
+            return
+
+        image = cv2.imread(image_path)
+        if image is None:
+            print("Failed to load image.")
+            return
+
+        # Step 1: Calculate the histogram for the image
+        histograms = []
+        colors = ('b', 'g', 'r')
+        for i, color in enumerate(colors):
+            hist = cv2.calcHist([image], [i], None, [256], [0, 256])
+            histograms.append(hist)
+
+        
+
+        # Step 2: Calculate statistical tests (e.g., chi-square or entropy)
+        chi_square_value = self.perform_chi_square_test(image)
+        entropy_value = self.calculate_entropy(image)
+        #rs_analysis_result = self.rs_analysis(image_path)
+
+        chi_square_threshold = 0.05
+        entropy_threshold = 7.5  # This is an arbitrary example, tune it based on your needs
+
+        if chi_square_value > chi_square_threshold or entropy_value < entropy_threshold: #or rs_analysis_result:
+            print("Suspicious image. Possible steganography detected.")
+        else:
+            print("No significant signs of steganography.")
+
+    
+
+
+    def perform_chi_square_test(self, image):
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        hist = cv2.calcHist([gray_image], [0], None, [256], [0, 256])
+
+        expected_freq = np.mean(hist)  # Average frequency as the expected distribution
+        chi_square_value, p_value = chisquare(hist.flatten(), [expected_freq]*256)
+        
+        return chi_square_value  # Or you can return p-value to determine the threshold
+
+
+
+    
+
+    def calculate_entropy(self, image):
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        hist = cv2.calcHist([gray_image], [0], None, [256], [0, 256])
+        hist_prob = hist / hist.sum()
+
+        # Ensure each element is a scalar by accessing `p[0]`
+        entropy = -np.sum([float(p[0]) * math.log2(float(p[0])) for p in hist_prob if p[0] != 0])
+        return entropy
+
+
+            
+
+    def rs_analysis(self,image_path):
+        #Step 1: Load image
+        
+        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        if image is None:
+            print(f"Failed to load image: {image_path}")
+            return None
+
+        height, width = image.shape
+
+        # Step 2: Define block size (e.g., 2x2 blocks)
+        block_size = 2
+
+        def smoothness(block):
+            # Measure smoothness of a block by calculating the sum of absolute differences between neighboring pixels
+            diffs = []
+            diffs.append(abs(int(block[0, 0]) - int(block[0, 1])))
+            diffs.append(abs(int(block[0, 0]) - int(block[1, 0])))
+            diffs.append(abs(int(block[1, 0]) - int(block[1, 1])))
+            diffs.append(abs(int(block[0, 1]) - int(block[1, 1])))
+            return sum(diffs)
+
+        def flip_lsb(block):
+            # Flip the least significant bit of each pixel in the block
+            return block ^ 1
+
+        regular_count = 0
+        singular_count = 0
+
+        # Step 3: Iterate over the image by block size
+        for i in range(0, height - block_size + 1, block_size):
+            for j in range(0, width - block_size + 1, block_size):
+                block = image[i:i+block_size, j:j+block_size]
+
+                # Calculate the smoothness of the original block
+                original_smoothness = smoothness(block)
+
+                # Flip the least significant bits (LSBs) of the block
+                flipped_block = flip_lsb(block)
+
+                # Calculate the smoothness of the flipped block
+                flipped_smoothness = smoothness(flipped_block)
+
+                # Step 4: Classify the block
+                if flipped_smoothness > original_smoothness:
+                    # If flipping increases smoothness, it's a regular block
+                    regular_count += 1
+                elif flipped_smoothness < original_smoothness:
+                    # If flipping decreases smoothness, it's a singular block
+                    singular_count += 1
+
+        # Step 5: Calculate R-S ratio
+        total_blocks = regular_count + singular_count
+        if total_blocks == 0:
+            print("No blocks analyzed.")
+            return None
+
+        regular_ratio = regular_count / total_blocks
+        singular_ratio = singular_count / total_blocks
+
+        print(f"Regular blocks: {regular_count}, Singular blocks: {singular_count}")
+        print(f"Regular ratio: {regular_ratio:.4f}, Singular ratio: {singular_ratio:.4f}")
+
+        # Step 6: Steganography detection logic
+        # If regular and singular groups become more balanced, it suggests possible LSB steganography
+        ratio = abs(regular_ratio - singular_ratio)
+
+        if ratio < 0.1:
+            print("Suspicious image. Possible steganography detected. called from RS analysis")
+            return True  # Steganography likely
+        
+        else:
+            print("No significant signs of steganography. called from RS analysis")
+            return False
             
 
 

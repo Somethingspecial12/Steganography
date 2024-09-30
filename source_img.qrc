@@ -1,13 +1,12 @@
 <RCC>
   <qresource prefix="images">
+    <file>html-css-collage-concept-with-hacker.jpg</file>
+    <file>sl_031420_28950_10.jpg</file>
     <file>backbutton.jpeg</file>
     <file>—Pngtree—check mark and cross gradient_15118783.png</file>
     <file>chrome-minimize-svgrepo-com.svg</file>
     <file>images.jpeg</file>
-    
-    
     <file>logoimgae.png</file>
     <file>hacker.jpg</file>
-    
   </qresource>
 </RCC>
